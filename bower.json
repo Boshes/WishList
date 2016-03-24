@@ -1,0 +1,23 @@
+{
+  "name": "project2",
+  "homepage": "project2",
+  "authors": [
+    "Justen Morgan"
+  ],
+  "description": "project2",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.2",
+    "bootstrap": "^3.3.6",
+    "jquery":"~2.0.3",
+    "angular-bootstrap":"1.2.5",
+    "angular-route":"1.5.2"
+  }
+}

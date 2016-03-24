@@ -1,0 +1,21 @@
+# ----------------------
+# Flask
+# ----------------------
+flask
+Flask-SQLAlchemy
+Flask-Migrate
+psycopg2
+BeautifulSoup
+requests
+bcrypt
+
+# ----------------------
+# Testing
+# ----------------------
+mock
+
+
+# ----------------------
+# Production Server
+# ----------------------
+gunicorn

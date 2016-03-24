@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <h3 class="modal-title">Choose a thumbnail</h3>
+</div>
+<div class="modal-body">
+    <table>
+        <tr ng-repeat="image in imagelist.imagelist track by $index">
+            <td>
+                <img src="{{image}}" ng-click="selectedImage(image)" style="max-width:100px;max-height:100px">
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+</div>

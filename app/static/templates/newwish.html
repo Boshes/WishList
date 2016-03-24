@@ -1,0 +1,33 @@
+<div class="container" ng-controller="NewWishController">
+  <h2>New Wish</h2>
+  <form method=post enctype="multipart/form-data" class="form-group">
+    <div class="form-group">
+      <label>Upload File</label>
+      <input type="file" class="form-control" name="filepath" ng-model="newWishForm.filepath">
+    </div>
+    <div class="form-group">
+      <label>Image search</label>
+      <input type="text" class="form-control" name="url" ng-model="newWishForm.url">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-warning" ng-click="imageSearch(newWishForm.url)">Image Search</button>
+    </div>
+        <div class="form-group">
+      <label>Title</label>
+      <input type="text" class="form-control" name="title" ng-model="newWishForm.title" required>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" class="form-control" name="description" ng-model="newWishForm.description" required>
+    </div>
+        <div class="form-group">
+      <label>Status</label>
+      <input type="select" class="form-control" name="status" ng-model="newWishForm.status">
+    </div>
+    
+    <br>
+        <div>
+        <button type="submit" class="btn btn-default" ng-disabled="disabled" ng-click="newWish()">Add Wish</button>
+      </div>
+  </form>
+</div>

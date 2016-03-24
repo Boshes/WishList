@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block js %}
+{% endblock %}
+
+
+{% block main %}
+<ul>
+{% for user in users %}
+<li>
+<a href="/user/{{user.id}}">
+{{user.first_name}}
+{{user.last_name}}
+</a>
+</li>
+
+{% endfor %}
+</ul>
+
+</form> 
+{% endblock %}
