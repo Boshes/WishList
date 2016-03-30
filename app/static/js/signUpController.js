@@ -6,17 +6,19 @@ angular.module('WishList').controller('SignUpController',['$scope','$location','
         
         $scope.error = "";
         $scope.disabled = true;
-        APIService.signUpUser($scope.signUpForm.filepath,$scope.signUpForm.firstname,$scope.signUpForm.lastname,$scope.signUpForm.username,$scope.signUpForm.password,$scope.signUpForm.email)
+        APIService.signUpUser($scope.signUpForm.firstname,$scope.signUpForm.lastname,$scope.signUpForm.username,$scope.signUpForm.password,$scope.signUpForm.email)
         .then(function () {
-            APIService.loginUser($scope.signUpForm.username,$scope.signUpForm.password)
+            APIService.loginUser($scope.signUpForm.email,$scope.signUpForm.password)
             .then(function (data){
-                $cookies.put('loggedIn' , true);
-                $cookies.put('token' , data.token);
-                $cookies.put('userId', data.id);
-                $cookies.put('userName' , data.username);
-                $location.path('/home');
-                $scope.disabled = false;
-                $scope.signUpForm = {};
+                if (data.data.status="logged"){
+                    $cookies.put('loggedIn' , true);
+                    $cookies.put('token' , data.data.token);
+                    $cookies.put('userId', data.data.id);
+                    $cookies.put('userName' , data.data.username);
+                    $location.path('/home');
+                    $scope.disabled = false;
+                    $scope.signUpForm = {};
+                }
             })
             .catch(function (err) {
                 console.log(err);

@@ -1,8 +1,8 @@
 angular.module('WishList').factory('APIService',['$http','$q',function($http,$q){
     return{
-        loginUser : function(username,password){
+        loginUser : function(email,password){
             var deferred = $q.defer();
-            $http.post('/login',{username: username, password:password})
+            $http.post('/api/user/login',{email:email, password:password})
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -13,9 +13,8 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
         },
         logoutUser : function(token){
             var deferred = $q.defer();
-            $http.post('/logout',{token:token})
+            $http.post('/api/user/logout',{token:token})
             .success(function(data){
-                console.log(data);
                 deferred.resolve(data);
             })
             .error(function(err){
@@ -23,9 +22,9 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
             });
             return deferred.promise;
         },
-        signUpUser : function(filepath,firstname,lastname,username,password,email){
+        signUpUser : function(firstname,lastname,username,password,email){
             var deferred = $q.defer();
-            $http.post('/signup',{filepath:filepath,firstname:firstname,lastname:lastname,username:username,password:password,email:email})
+            $http.post('/api/user/register',{firstname:firstname,lastname:lastname,username:username,password:password,email:email})
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -36,7 +35,7 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
         },
          getUsers : function(){
             var deferred = $q.defer();
-            $http.post('/users')
+            $http.get('/api/users')
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -47,7 +46,7 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
         },
         getUser : function(userid){
             var deferred = $q.defer();
-            $http.post('/user/'+userid,{userid: userid})
+            $http.get('/api/user/'+userid,{userid: userid})
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -58,7 +57,7 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
         },
         newWish : function(userid,url,title,description,status){
             var deferred = $q.defer();
-            $http.post('/wish/'+userid,{userid:userid,url:url,title:title,description:description,status:status})
+            $http.post('/api/user/'+userid+'/wishlist',{userid:userid,url:url,title:title,description:description,status:status})
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -68,8 +67,9 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
             return deferred.promise;
         },
         getImages : function(url){
+            console.log(url);
             var deferred = $q.defer();
-            $http.post('/api/thumbnail/process',{url:url})
+            $http.get('/api/thumbnail/process?url='+encodeURI(url))
             .success(function(data){
                 console.log(data);
                 deferred.resolve(data);
@@ -81,7 +81,7 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
         },
         getWishes : function(userid){
             var deferred = $q.defer();
-            $http.post('/wishes/'+userid,{userid:userid})
+            $http.get('/api/user/'+userid+'/wishlist',{userid:userid})
             .success(function(data){
                 deferred.resolve(data);
             })
@@ -91,6 +91,5 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
             });
             return deferred.promise;
         }
-       
     };
 }]);

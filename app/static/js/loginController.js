@@ -6,13 +6,13 @@ angular.module('WishList').controller('LoginController',['$scope','$location','$
         $scope.error = "";
         $scope.disabled = true;
         
-        APIService.loginUser($scope.loginForm.username, $scope.loginForm.password)
+        APIService.loginUser($scope.loginForm.email, $scope.loginForm.password)
         .then(function (data) {
-            if (data.status =='logged'){
+            if (data.message =='logged'){
                 $cookies.put('loggedIn' , true);
-                $cookies.put('token' , data.token);
-                $cookies.put('userId', data.id);
-                $cookies.put('userName' , data.username);
+                $cookies.put('token' , data.data.token);
+                $cookies.put('userId', data.data.id);
+                $cookies.put('userName' , data.data.username);
                 $location.path('/home');
                 $scope.disabled = false;
                 $scope.loginForm = {};

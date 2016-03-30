@@ -1,6 +1,6 @@
 angular.module('WishList').controller('NewWishController',['$scope','$location','$cookies','$uibModal','APIService',function($scope,$location,$cookies,$uibModal,APIService){
     if($cookies.get('loggedIn')!='true'){
-    $location.path('/');
+        $location.path('/');
     }
     
     var image;
@@ -13,10 +13,7 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
     
     $scope.newWish = function () {
         var user = $cookies.get('userId');
-       
-        $scope.error = "";
-        $scope.disabled = true;
-        APIService.newWish(user,image,$scope.newWishForm.title,$scope.newWishForm.description,$scope.newWishForm.status)
+        APIService.newWish(user,image,$scope.newWishForm.title,$scope.newWishForm.description)
         .then(function () {
             $location.path('/wishes');
             $scope.disabled = false;
@@ -29,7 +26,6 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
             $scope.newWishForm = {};
         });
     };
-
 
     $scope.imageSearch = function(imagelink){
         if ((imagelink.indexOf('www.')>=0) && !(imagelink.indexOf('http://www.')>=0)){
@@ -47,7 +43,6 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
         APIService.getImages($scope.imagelink)
         .then(function(data){
            $scope.imagelist = data.data.thumbnails;
-           console.log($scope.imagelist);
            var modalInstance = $uibModal.open({
                templateUrl: 'static/templates/wishgrid.html',
                controller: 'WishModal',
@@ -64,14 +59,11 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
            });
         });
     };
-    
 }]);
 
 angular.module('WishList').controller('WishModal',function($scope,$uibModalInstance,imagelist){
     
     $scope.imagelist = imagelist;
-    console.log("on modal");
-    console.log($scope.imagelist);
     
     $scope.selectedImage = function(image){
         $scope.selected = image;

@@ -7,7 +7,7 @@ angular.module('WishList').controller('WishesController',['$scope','$location','
     }
     APIService.getWishes($scope.currentUserId)
     .then(function(data){
-        $scope.wishes = data.wishes;
+        $scope.wishes = data.data.wishes;
     })
     .catch(function(){
         

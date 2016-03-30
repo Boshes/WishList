@@ -2,13 +2,11 @@ angular.module('WishList').controller('UserViewController',['$scope','$location'
     $scope.currentUserName = $cookies.get('userName');
     $scope.currentUserId = $cookies.get('userId');
     if($cookies.get('loggedIn')!='true'){
-        console.log("invalid access");
         $location.path('/');
     }
     APIService.getUser($scope.currentUserId)
     .then(function(data){
-        $scope.user = data;
-        console.log($scope.user);
+        $scope.user = data.data;
     })
     .catch(function(){
         

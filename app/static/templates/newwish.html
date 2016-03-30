@@ -6,7 +6,7 @@
       <label>Image search</label>
       <input type="text" class="form-control" name="url" ng-model="newWishForm.url">
     </div>
-    <img src="{{image}}">
+    <img src="{{image}}" style="max-height:100px; max-width:100px">
     <div class="form-group">
       <button class="btn btn-warning" ng-click="imageSearch(newWishForm.url)">Image Search</button>
     </div>
@@ -17,13 +17,6 @@
     <div class="form-group">
       <label>Description</label>
       <input type="text" class="form-control" name="description" ng-model="newWishForm.description" required>
-    </div>
-        <div class="form-group">
-      <label>Status</label>
-      <select class="form-control" name="status" ng-model="newWishForm.status">
-        <option value="{{options.NotReceieved}}">Not Received</option>
-        <option value="{{options.Received}}">Received</option>
-        </select>
     </div>
     <br>
         <div>

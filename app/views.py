@@ -24,7 +24,7 @@ def index():
     return app.send_static_file('index.html')
     
 #Sign up page
-@app.route('/signup', methods=['POST'])
+@app.route('/api/user/register', methods=['POST'])
 def signup():
     json_data = json.loads(request.data)
     user = User(json_data.get('firstname'), json_data.get('lastname'), json_data.get('username'),bcrypt.hashpw(json_data.get('password').encode('utf-8'), bcrypt.gensalt()),json_data.get('email'),datetime.now())
@@ -32,27 +32,27 @@ def signup():
     if user:
         db.session.add(user)
         db.session.commit()
-        response = jsonify({'firstname':json_data.get('firstname'),'lastname':json_data.get('lastname'),'username':json_data.get('username'),'email':json_data.get('email')})
+        response = jsonify({"error":"null","data":{'firstname':json_data.get('firstname'),'lastname':json_data.get('lastname'),'username':json_data.get('username'),'email':json_data.get('email')},"message":"Sucess"})
     else:   
-        response = jsonify({'status':'not signed up'})
+        response = jsonify({"error":"1","data":{},'message':'not signed up'})
     return response
 
 #Log in page for a registered user
-@app.route('/login', methods=["POST"])
+@app.route('/api/user/login', methods=["POST"])
 def login():
     json_data = json.loads(request.data)
-    user = db.session.query(User).filter_by(username=json_data['username']).first()
+    user = db.session.query(User).filter_by(email=json_data['email']).first()
     if user and user.password == bcrypt.hashpw(json_data.get('password').encode('utf-8'), user.password.decode().encode('utf-8')):
         token = Token(user.id)
         db.session.add(token)
         db.session.commit()
-        response = jsonify({'id':user.id,'username':json_data.get('username'),'token':token.token,'status':'logged'})
+        response = jsonify({"error":"null","data":{'id':user.id,'username':json_data.get('username'),'token':token.token},"message":"logged"})
     else:
-        response = jsonify({'status':'not logged'})
+        response = jsonify({"error":"1","data":{},"message":'not logged'})
     return response
 
 #Log out a user
-@app.route('/logout',methods=["POST"])
+@app.route('/api/user/logout',methods=["POST"])
 def logout():
     json_data = json.loads(request.data)
     token = db.session.query(Token).filter_by(token=json_data['token']).first()
@@ -65,55 +65,63 @@ def logout():
     return response
     
 #View a registered user page
-@app.route('/user/<userid>',methods=["POST"])
+# curl GET http://lab7-boshes.c9users.io/api/user/37
+@app.route('/api/user/<userid>',methods=["GET"])
 def user(userid):
     user = db.session.query(User).filter_by(id=userid).first()
     if user:
-        response = jsonify({'id':user.id,'firstname':user.first_name,'lastname':user.last_name,'username':user.username,'email':user.email,'addon':timeinfo(user.addon)})
+        response = jsonify({"error":"null","data":{'id':user.id,'firstname':user.first_name,'lastname':user.last_name,'username':user.username,'email':user.email,'addon':timeinfo(user.addon)},"message":"Success"})
     else:
-        response = jsonify({'status':'did not retrieve user'})
+        response = jsonify({"error":"1","data":{},'message':'did not retrieve user'})
     return response
     
 #View all users page
-@app.route('/users',methods=["POST"])
+# curl GET http://lab7-boshes.c9users.io/api/users
+@app.route('/api/users',methods=["GET"])
 def users():
     users = db.session.query(User).all()
     userlist=[]
     for user in users:
         userlist.append({'id':user.id,'firstname':user.first_name,'lastname':user.last_name,'username':user.username,'email':user.email})
-    response = jsonify(users=userlist)
+    if (len(userlist)>0):
+        response = jsonify({"error":"null","data":{"users":userlist},"message":"Success"})
+    else:
+        response = jsonify({"error":"1","data":{},"message":"did not retrieve all users"})
     return response
 
 #New Wish
-@app.route('/wish/<userid>',methods=["POST"])
-def new_wish(userid):
-    user = db.session.query(User).filter_by(id=userid).first()
-    json_data = json.loads(request.data)
-    wish = Wish(user.id,json_data.get('url'),json_data.get('title'),json_data.get('description'),json_data.get('status'),datetime.now())
-    if wish:
-        db.session.add(wish)
-        db.session.commit()
-        response = jsonify({'userid':userid,'url':json_data.get('url'),'title':json_data.get('title'),'description':json_data.get('description')})
-    else:
-        response = jsonify({'status':'did not create wish'})
-    return response
-    
-#View all wishes by a user
-@app.route('/wishes/<userid>',methods=["POST"])
+# curl GET http://lab7-boshes.c9users.io/api/user/37/wishlist
+# curl -H "Content-Type: application/json" -X POST -d '{"url":"http://www.google.com","title":"Google.com","description":"All of Google"}' http://lab7-boshes.c9users.io/api/user/37/wishlist
+@app.route('/api/user/<userid>/wishlist',methods=["GET","POST"])
 def wishes(userid):
-    user = db.session.query(User).filter_by(id=userid).first()
-    wishes = db.session.query(Wish).filter_by(userid=user.id).all()
-    wishlist = []
-    for wish in wishes:
-        wishlist.append({'name':wish.name,'url':wish.url,'description':wish.description,'status':wish.status,'addon':timeinfo(wish.addon)})
-    response = jsonify(wishes=wishlist)
-    return response
+    if request.method=="GET":
+        user = db.session.query(User).filter_by(id=userid).first()
+        wishes = db.session.query(Wish).filter_by(userid=user.id).all()
+        wishlist = []
+        for wish in wishes:
+            wishlist.append({'title':wish.name,'url':wish.url,'description':wish.description,'addon':timeinfo(wish.addon)})
+        if(len(wishlist)>0):
+            response = jsonify({"error":"null","data":{"wishes":wishlist},"message":"Success"})
+        else:
+            response = jsonify({"error":"1","data":{},"message":"Unable to get wishes"})
+        return response
+    else:
+        user = db.session.query(User).filter_by(id=userid).first()
+        json_data = json.loads(request.data)
+        wish = Wish(user.id,json_data.get('url'),json_data.get('title'),json_data.get('description'),datetime.now())
+        if wish:
+            db.session.add(wish)
+            db.session.commit()
+            response = jsonify({"error":"null","data":{'userid':userid,'url':json_data.get('url'),'title':json_data.get('title'),'description':json_data.get('description')},"message":"Success"})
+        else:
+            response = jsonify({"error":"1", "data":{},'message':'did not create wish'})
+        return response
 
 #Used in image search on new wishes
-@app.route('/api/thumbnail/process', methods=['POST'])
+# curl -X GET http://lab7-boshes.c9users.io/api/thumbnail/process?url=http://www.amazon.com/gp/product/B00MRJ8LSU/
+@app.route('/api/thumbnail/process', methods=['GET'])
 def get_images():
-    json_data = json.loads(request.data)
-    url = json_data.get('url')
+    url = request.args.get('url')
     soup = BeautifulSoup.BeautifulSoup(requests.get(url).text)
     images = BeautifulSoup.BeautifulSoup(requests.get(url).text).findAll("img")
     urllist = []
@@ -126,7 +134,6 @@ def get_images():
     for image in images:
         if "sprite" not in image["src"]:
             urllist.append(urlparse.urljoin(url, image["src"]))
-    print urllist
     if(len(urllist)>0):
         response = jsonify({'error':'null', "data":{"thumbnails":urllist},"message":"Success"})
     else:
@@ -143,6 +150,13 @@ def timeinfo(entry):
     year = time.strftime("%Y")
     return day + ", " + date + " " + month + " " + year
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+  
 #Runs application
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8888")

@@ -45,16 +45,14 @@ class Wish(db.Model):
     url = db.Column(db.String(255))
     name = db.Column(db.String(255))
     description = db.Column(db.String(255))
-    status = db.Column(db.Boolean)
     addon = db.Column(db.DateTime,nullable=False)
     
     
-    def __init__(self,userid,url,name,description,status,addon):
+    def __init__(self,userid,url,name,description,addon):
         self.userid = userid
         self.url = url
         self.name = name
         self.description = description
-        self.status = status
         self.addon = addon
     
     def get_id(self):
