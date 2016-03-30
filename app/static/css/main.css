@@ -5,4 +5,16 @@
     position: absolute;
     top: 0; left: 0; bottom: 0; right: 0;
 }
+.wrapper {
+    background: url('../img/background.jpg');
+    background-repeat: repeat
+}
+.container{
+    background: url('../img/pattern2.jpg');
+    background-repeat: repeat;
+}
 
+nav {
+    background: url('../img/pattern.png');
+    background-repeat: repeat;
+}

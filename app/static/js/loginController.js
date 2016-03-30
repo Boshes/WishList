@@ -3,10 +3,8 @@ angular.module('WishList').controller('LoginController',['$scope','$location','$
     $location.path('/home');
     }
     $scope.login = function(){
-        $scope.error = "";
-        $scope.disabled = true;
         
-        APIService.loginUser($scope.loginForm.email, $scope.loginForm.password)
+        APIService.loginUser($scope.email, $scope.password)
         .then(function (data) {
             if (data.message =='logged'){
                 $cookies.put('loggedIn' , true);
@@ -19,9 +17,7 @@ angular.module('WishList').controller('LoginController',['$scope','$location','$
             }
         })
         .catch(function () {
-            $scope.error = true;
-            $scope.errorMessage = "Invalid username and/or password";
-            $scope.disabled = false;
+            $scope.errorMessage = "Error logging in";
             $scope.loginForm = {};
         });
     };

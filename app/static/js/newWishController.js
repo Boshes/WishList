@@ -13,16 +13,13 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
     
     $scope.newWish = function () {
         var user = $cookies.get('userId');
-        APIService.newWish(user,image,$scope.newWishForm.title,$scope.newWishForm.description)
+        APIService.newWish(user,image,$scope.title,$scope.description)
         .then(function () {
             $location.path('/wishes');
-            $scope.disabled = false;
             $scope.newWishForm = {};
         })
         .catch(function () {
-            $scope.error = true;
             $scope.errorMessage = "Invalid wish";
-            $scope.disabled = false;
             $scope.newWishForm = {};
         });
     };

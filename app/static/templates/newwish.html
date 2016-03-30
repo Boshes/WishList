@@ -1,26 +1,37 @@
 <wishlistheader></wishlistheader>
 <div class="container" ng-controller="NewWishController">
   <h2>New Wish</h2>
-  <form method="post" class="form-group">
-    <div class="form-group">
-      <label>Image search</label>
-      <input type="text" class="form-control" name="url" ng-model="newWishForm.url">
-    </div>
-    <img src="{{image}}" style="max-height:100px; max-width:100px">
-    <div class="form-group">
-      <button class="btn btn-warning" ng-click="imageSearch(newWishForm.url)">Image Search</button>
-    </div>
-        <div class="form-group">
+  <div ng-form="wishForm" ng-class="{'has-error':
+    (wishForm.url.$invalid && wishForm.url.$dirty) || 
+    (wishForm.title.$invalid && wishForm.title.$dirty) ||
+    (wishForm.description.$invalid && wishForm.description.$dirty)}">
+    <div class="col-lg-6">
+      <div class="form-group">
       <label>Title</label>
-      <input type="text" class="form-control" name="title" ng-model="newWishForm.title" required>
+      <input type="text" class="form-control" name="title" ng-model="title" placeholder="Give your wish a name" required>
     </div>
-    <div class="form-group">
+    <uib-alert type="danger" ng-if="wishForm.title.$dirty && wishForm.title.$invalid">Please enter a name</uib-alert>
+     <div class="form-group">
       <label>Description</label>
-      <input type="text" class="form-control" name="description" ng-model="newWishForm.description" required>
+      <input type="text" class="form-control" name="description" ng-model="description" placeholder="Enter a description" required>
+    </div>
+     <uib-alert type="danger" ng-if="wishForm.description.$dirty && wishForm.description.$invalid">Please enter a description</uib-alert>
+    </div>
+    <div class="col-lg-6">
+    <div class="form-group text-center">
+      <label>Image search</label>
+      <input type="text" class="form-control" name="url" ng-model="url">
     </div>
     <br>
-        <div>
-        <button type="submit" class="btn btn-default" ng-disabled="disabled" ng-click="newWish()">Add Wish</button>
+    <div class="form-group text-center">
+      <button class="btn btn-warning" ng-click="imageSearch(url)">Image Search</button>
       </div>
-  </form>
+    <br>
+    <img src="{{image}}" style="max-height:100px; max-width:100px">
+    <br>
+        <div class="form-group text-center">
+        <button type="submit" class="btn btn-default" ng-click="newWish()">Add Wish</button>
+      </div>
+  </div>
+</div>
 </div>
