@@ -1,13 +1,4 @@
-{% extends "base.html" %}
-
-
-{% block js %}
-{% endblock %}
-
-
-{% block main %}
-
-{{user.first_name}}
-{{user.last_name}}
-
-{% endblock %}
+<wishlistheader></wishlistheader>
+<div class="container" ng-controller="UserViewController">
+    {{user.firstname}} {{user.lastname}}
+</div>

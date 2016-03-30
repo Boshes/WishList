@@ -1,28 +1,21 @@
 """
-Flask Documentation:     http://flask.pocoo.org/docs/
-Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
-Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
-
-This file creates your application.
+Flask Backend for Wish List Application
+Justen Morgan - 620070138
 """
 import os
 from app import app, db
 from datetime import *
 from flask import render_template, request, redirect, url_for,jsonify,session,send_file
 
-from app.models import User, Wish
+from app.models import User, Wish, Token
 
-from werkzeug import secure_filename
 import json
 import time
 import requests
 import BeautifulSoup
 import bcrypt
 import urlparse
-    
-###
-# Routing for your application.
-###
+import urllib
 
 #Landing page
 @app.route('/')
@@ -34,103 +27,90 @@ def index():
 @app.route('/signup', methods=['POST'])
 def signup():
     json_data = json.loads(request.data)
-    uploadedfile = json_data.get('filepath')
-    #get this working
-    if uploadedfile:
-        uploadedfilename = json_data.get('username') + '_' + secure_filename(uploadedfile.filename)
-        filepath = os.path.join(os.getcwd() + '/app/static/useruploads/',uploadedfilename)
-        uploadedfile.save(filepath)
-    else:
-        uploadedfilename = '/app/static/img/octocat.png'
-    user = User(uploadedfilename,json_data.get('firstname'), json_data.get('lastname'), json_data.get('username'),bcrypt.hashpw(json_data.get('password').encode('utf-8'), bcrypt.gensalt()),json_data.get('email'),datetime.now())
-    try:
+    user = User(json_data.get('firstname'), json_data.get('lastname'), json_data.get('username'),bcrypt.hashpw(json_data.get('password').encode('utf-8'), bcrypt.gensalt()),json_data.get('email'),datetime.now())
+    print user
+    if user:
         db.session.add(user)
         db.session.commit()
-        status = "success"
-    except:
-        status = "This user already exists"
-    return jsonify({'result':status})
+        response = jsonify({'firstname':json_data.get('firstname'),'lastname':json_data.get('lastname'),'username':json_data.get('username'),'email':json_data.get('email')})
+    else:   
+        response = jsonify({'status':'not signed up'})
+    return response
 
 #Log in page for a registered user
 @app.route('/login', methods=["POST"])
 def login():
     json_data = json.loads(request.data)
-    user = User.query.filter_by(username=json_data['username']).first()
-    print user
-    if user and user.password == bcrypt.hashpw(json_data.get('username').encode('utf-8'), user.password.decode().encode('utf-8')):
-        session['user'] = user.username
-        status = True
+    user = db.session.query(User).filter_by(username=json_data['username']).first()
+    if user and user.password == bcrypt.hashpw(json_data.get('password').encode('utf-8'), user.password.decode().encode('utf-8')):
+        token = Token(user.id)
+        db.session.add(token)
+        db.session.commit()
+        response = jsonify({'id':user.id,'username':json_data.get('username'),'token':token.token,'status':'logged'})
     else:
-        status = False
-    print status
-    return jsonify({'logged in': status})
+        response = jsonify({'status':'not logged'})
+    return response
 
 #Log out a user
-@app.route('/logout')
+@app.route('/logout',methods=["POST"])
 def logout():
-    session.pop('logged_in',None)
-    return jsonify({'success': 'logged out'})
+    json_data = json.loads(request.data)
+    token = db.session.query(Token).filter_by(token=json_data['token']).first()
+    if token:
+        db.session.delete(token)
+        db.session.commit()
+        response = jsonify({'status':'logged out'})
+    else:
+        response = jsonify({'status':'did not log out'})
+    return response
     
 #View a registered user page
-@app.route('/user/<id>',methods=["GET","POST"])
-def user(id):
-    user = User.query.filter_by(id=id).first()
-    image = '/static/useruploads/' + user.image
-    if request.method == 'POST' or ('Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json'):
-        return jsonify(id=user.id, image=user.image,firstname = user.first_name, lastname = user.last_name, username=user.username, email = user.email,addon=user.addon)
+@app.route('/user/<userid>',methods=["POST"])
+def user(userid):
+    user = db.session.query(User).filter_by(id=userid).first()
+    if user:
+        response = jsonify({'id':user.id,'firstname':user.first_name,'lastname':user.last_name,'username':user.username,'email':user.email,'addon':timeinfo(user.addon)})
     else:
-        user = {'id':user.id,'image':user.image, 'firstname':user.first_name, 'lastname': user.last_name, 'username':user.username,'email': user.email,'addon':timeinfo(user.addon)}
-        return render_template('userview.html', user=user)
-
+        response = jsonify({'status':'did not retrieve user'})
+    return response
+    
 #View all users page
-@app.route('/users',methods=["POST","GET"])
+@app.route('/users',methods=["POST"])
 def users():
     users = db.session.query(User).all()
-    if request.method == "POST" or ('Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json'):
-        userlist=[]
-        for user in users:
-            userlist.append({'id':user.id,'username':user.username})
-        return jsonify(users=userlist)
-    else:
-        return render_template('users.html', users=users)
+    userlist=[]
+    for user in users:
+        userlist.append({'id':user.id,'firstname':user.first_name,'lastname':user.last_name,'username':user.username,'email':user.email})
+    response = jsonify(users=userlist)
+    return response
 
-
-
-@app.route('/wish/<id>',methods=["POST"])
-def new_wish(id):
+#New Wish
+@app.route('/wish/<userid>',methods=["POST"])
+def new_wish(userid):
+    user = db.session.query(User).filter_by(id=userid).first()
     json_data = json.loads(request.data)
-    if request.method == 'POST':
-        uploadedfile = request.files['thumbnail']
-        if uploadedfile:
-            uploadedfilename = '_' + secure_filename(uploadedfile.filename)
-            filepath = os.path.join(os.getcwd() + '/app/static/wishuploads/',uploadedfilename)
-            uploadedfile.save(filepath)
-        elif not uploadedfile and form.url.data!="":
-            return images(get_images(form.url.data))
-            uploadedfilename = '_' + secure_filename(uploadedfile.filename)
-            filepath = os.path.join(os.getcwd() + '/app/static/wishuploads/', uploadedfilename)
-            uploadedfile.save(filepath)
-        else:
-            uploadedfile = ""
-        wish = Wish(1,uploadedfilename,json_data.get('title'), json_data.get('description'),json_data.get('status'),datetime.now())
+    wish = Wish(user.id,json_data.get('url'),json_data.get('title'),json_data.get('description'),json_data.get('status'),datetime.now())
+    if wish:
         db.session.add(wish)
         db.session.commit()
-        # return images(get_images(form.url.data))
+        response = jsonify({'userid':userid,'url':json_data.get('url'),'title':json_data.get('title'),'description':json_data.get('description')})
     else:
-        return render_template('wishadd.html',form=form)
+        response = jsonify({'status':'did not create wish'})
+    return response
     
-@app.route('/wishes/',methods=["POST","GET"])
-def wishes():
-    wishes = db.session.query(Wish).all()
-    if request.method == "POST" or ('Content-Type' in request.headers and request.headers['Content-Type'] == 'application/json'):
-        wishlist=[{'id':user.id}]
-        for wish in wishes:
-            wishlist.append({'title':wish.name,'description':wish.description})
-        return jsonify(wishes=wishlist)
-    else:
-        return render_template('wishes.html', wishes=wishes)        
+#View all wishes by a user
+@app.route('/wishes/<userid>',methods=["POST"])
+def wishes(userid):
+    user = db.session.query(User).filter_by(id=userid).first()
+    wishes = db.session.query(Wish).filter_by(userid=user.id).all()
+    wishlist = []
+    for wish in wishes:
+        wishlist.append({'name':wish.name,'url':wish.url,'description':wish.description,'status':wish.status,'addon':timeinfo(wish.addon)})
+    response = jsonify(wishes=wishlist)
+    return response
 
-@app.route('/images', methods=['POST'])
+#Used in image search on new wishes
+@app.route('/api/thumbnail/process', methods=['POST'])
 def get_images():
     json_data = json.loads(request.data)
     url = json_data.get('url')
@@ -147,13 +127,13 @@ def get_images():
         if "sprite" not in image["src"]:
             urllist.append(urlparse.urljoin(url, image["src"]))
     print urllist
-    return jsonify(imagelist=urllist)
+    if(len(urllist)>0):
+        response = jsonify({'error':'null', "data":{"thumbnails":urllist},"message":"Success"})
+    else:
+        response = jsonify({'error':'1','data':{},'message':'Unable to extract thumbnails'})
+    return response
             
-
-
-
-
-
+#Used for time added on items
 def timeinfo(entry):
     day = time.strftime("%a")
     date = time.strftime("%d")
@@ -162,32 +142,7 @@ def timeinfo(entry):
     month = time.strftime("%b")
     year = time.strftime("%Y")
     return day + ", " + date + " " + month + " " + year
-###
-# The functions below should be applicable to all Flask apps.
-###
-# @app.after_request
-# def add_header(response):
-#     """
-#     Add headers to both force latest IE rendering engine or Chrome Frame,
-#     and also to cache the rendered page for 10 minutes.
-#     """
-#     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-#     response.headers['Cache-Control'] = 'public, max-age=600'
-#     return response
 
-@app.route('/status')
-def status():
-    if session.get('logged_in'):
-        if session['logged_in']:
-            return jsonify({'status': True})
-    else:
-        return jsonify({'status': False})
-
-# @app.errorhandler(404)
-# def page_not_found(error):
-#     """Custom 404 page."""
-#     return app.send_static_file('static/templates/404.html'), 404
-
-
+#Runs application
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0",port="8888")

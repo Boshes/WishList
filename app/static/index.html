@@ -5,21 +5,27 @@
   <title>Wish List</title>
   <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/static/css/main.css">
   <script src="/static/bower_components/angular/angular.js"></script>
   <script src="/static/bower_components/angular-route/angular-route.js"></script>
   <script src="/static/bower_components/jquery/dist/jquery.js"></script>
   <script src="/static/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
   <script src="/static/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="/static/bower_components/angular-cookies/angular-cookies.js"></script>
   <script src="/static/js/main.js"></script>
   <script src="/static/js/services.js"></script>
+  <script src="/static/js/landingController.js"></script>
   <script src="/static/js/wishlistheader.js"></script>
   <script src="/static/js/loginController.js"></script>
   <script src="/static/js/logoutController.js"></script>
   <script src="/static/js/signUpController.js"></script>
+  <script src="/static/js/userViewController.js"></script>
+  <script src="/static/js/usersController.js"></script>
   <script src="/static/js/newWishController.js"></script>
+  <script src="/static/js/wishesController.js"></script>
 </head>
 <body ng-app="WishList">
-  <div class="container" ng-controller="LogoutController">
+  <div class="container">
     <ng-view></ng-view>
   </div>
 </body>

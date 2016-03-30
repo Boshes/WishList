@@ -1,14 +1,12 @@
+<wishlistheader></wishlistheader>
 <div class="container" ng-controller="NewWishController">
   <h2>New Wish</h2>
-  <form method=post enctype="multipart/form-data" class="form-group">
-    <div class="form-group">
-      <label>Upload File</label>
-      <input type="file" class="form-control" name="filepath" ng-model="newWishForm.filepath">
-    </div>
+  <form method="post" class="form-group">
     <div class="form-group">
       <label>Image search</label>
       <input type="text" class="form-control" name="url" ng-model="newWishForm.url">
     </div>
+    <img src="{{image}}">
     <div class="form-group">
       <button class="btn btn-warning" ng-click="imageSearch(newWishForm.url)">Image Search</button>
     </div>
@@ -22,9 +20,11 @@
     </div>
         <div class="form-group">
       <label>Status</label>
-      <input type="select" class="form-control" name="status" ng-model="newWishForm.status">
+      <select class="form-control" name="status" ng-model="newWishForm.status">
+        <option value="{{options.NotReceieved}}">Not Received</option>
+        <option value="{{options.Received}}">Received</option>
+        </select>
     </div>
-    
     <br>
         <div>
         <button type="submit" class="btn btn-default" ng-disabled="disabled" ng-click="newWish()">Add Wish</button>

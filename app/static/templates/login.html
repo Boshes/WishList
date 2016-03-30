@@ -1,9 +1,3 @@
-{% extends "base.html" %}
-
-{% block js %}
-{% endblock %}
-
-{% block main %}
 <div class="container" ng-controller="LoginController">
   <h2>Login</h2>
   <form class="form-group" ng-submit="login()">
@@ -15,11 +9,9 @@
       <label>Password</label>
       <input type="password" class="form-control" name="password" ng-model="loginForm.password" required>
     </div>
-    
     <br>
     <div>
         <button type="submit" class="btn btn-default" ng-disabled="disabled">Login</button>
       </div>
   </form>
 </div>
-{% endblock %}

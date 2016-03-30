@@ -1,4 +1,5 @@
 <nav>
+    <div class="container">
     <ul class="nav nav-pills pull-left">
         <li role="presentation">
             <a href="#/home">Home</a>
@@ -7,18 +8,19 @@
             <a href="#/wishes">View Wishes</a>
         </li>
         <li role="presentation">
-            <a href="#/wish/1">New Wish</a>
+            <a href="#/wish">New Wish</a>
         </li>
     </ul> 
     <ul class="nav nav-pills pull-right">
         <li role="presentation">
-            <a href="#">View User</a>
+            <a href="#/user">View User</a>
         </li>
         <li role="presentation">
-            <a href="#/users">View all users</a>
+            <a href="#/users">View All Users</a>
         </li>
-        <li role="presentation">
-            <a href="#/logout" ng-click="logout()">Logout</a>
+        <li role="presentation" ng-controller="LogoutController">
+            <a href="" ng-click="logout()">Logout</a>
         </li>
     </ul>
+    </div>
 </nav>

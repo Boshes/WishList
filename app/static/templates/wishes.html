@@ -1,0 +1,10 @@
+<wishlistheader></wishlistheader>
+<div class="container" ng-controller="WishesController">
+    <table ng-table class="table table-bordered table-hover table-condensed">
+        <tr ng-repeat="wish in wishes">
+            <td>
+                {{wish.name}}
+            </td>
+        </tr>
+    </table>
+</div>
