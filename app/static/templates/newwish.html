@@ -1,6 +1,6 @@
 <wishlistheader></wishlistheader>
-<div class="container" ng-controller="NewWishController">
-  <h2>New Wish</h2>
+<div class="container col-lg-12" ng-controller="NewWishController">
+  <h1>New Wish</h1>
   <div ng-form="wishForm" ng-class="{'has-error':
     (wishForm.url.$invalid && wishForm.url.$dirty) || 
     (wishForm.title.$invalid && wishForm.title.$dirty) ||
@@ -18,20 +18,21 @@
      <uib-alert type="danger" ng-if="wishForm.description.$dirty && wishForm.description.$invalid">Please enter a description</uib-alert>
     </div>
     <div class="col-lg-6">
-    <div class="form-group text-center">
-      <label>Image search</label>
-      <input type="text" class="form-control" name="url" ng-model="url">
-    </div>
-    <br>
-    <div class="form-group text-center">
-      <button class="btn btn-warning" ng-click="imageSearch(url)">Image Search</button>
+      <div class="form-group">
+    <label>Image search</label>
+    <div class="input-group text-center">
+      <input type="text" class="form-control" name="url" ng-model="url" placeholder="Enter a URL">
+      <span class="input-group-btn text-center">
+        <button class="btn btn-warning btn-secondary" type="button" ng-click="imageSearch(url)">Image Search</button>
+      </span>
+      </div>
       </div>
     <br>
-    <img src="{{image}}" style="max-height:100px; max-width:100px">
+    <img src="{{image}}" style="max-height:100px; max-width:100px; margin:auto; display:block;">
     <br>
         <div class="form-group text-center">
         <button type="submit" class="btn btn-default" ng-click="newWish()">Add Wish</button>
       </div>
   </div>
-</div>
+  </div>
 </div>

@@ -13,7 +13,7 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
     
     $scope.newWish = function () {
         var user = $cookies.get('userId');
-        APIService.newWish(user,image,$scope.title,$scope.description)
+        APIService.newWish(user,$scope.url,image,$scope.title,$scope.description)
         .then(function () {
             $location.path('/wishes');
             $scope.newWishForm = {};

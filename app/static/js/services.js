@@ -55,9 +55,9 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
             });
             return deferred.promise;
         },
-        newWish : function(userid,url,title,description,status){
+        newWish : function(userid,url,thumbnail,title,description,status){
             var deferred = $q.defer();
-            $http.post('/api/user/'+userid+'/wishlist',{userid:userid,url:url,title:title,description:description,status:status})
+            $http.post('/api/user/'+userid+'/wishlist',{userid:userid,url:url,thumbnail:thumbnail,title:title,description:description,status:status})
             .success(function(data){
                 deferred.resolve(data);
             })

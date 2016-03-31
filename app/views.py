@@ -99,7 +99,7 @@ def wishes(userid):
         wishes = db.session.query(Wish).filter_by(userid=user.id).all()
         wishlist = []
         for wish in wishes:
-            wishlist.append({'title':wish.name,'url':wish.url,'description':wish.description,'addon':timeinfo(wish.addon)})
+            wishlist.append({'title':wish.name,'url':wish.url,'thumbnail':wish.thumbnail,'description':wish.description,'addon':timeinfo(wish.addon)})
         if(len(wishlist)>0):
             response = jsonify({"error":"null","data":{"wishes":wishlist},"message":"Success"})
         else:
@@ -108,11 +108,11 @@ def wishes(userid):
     else:
         user = db.session.query(User).filter_by(id=userid).first()
         json_data = json.loads(request.data)
-        wish = Wish(user.id,json_data.get('url'),json_data.get('title'),json_data.get('description'),datetime.now())
+        wish = Wish(user.id,json_data.get('url'),json_data.get('thumbnail'),json_data.get('title'),json_data.get('description'),datetime.now())
         if wish:
             db.session.add(wish)
             db.session.commit()
-            response = jsonify({"error":"null","data":{'userid':userid,'url':json_data.get('url'),'title':json_data.get('title'),'description':json_data.get('description')},"message":"Success"})
+            response = jsonify({"error":"null","data":{'userid':userid,'url':json_data.get('url'),'thumbnail':wish.thumbnail,'title':json_data.get('title'),'description':json_data.get('description')},"message":"Success"})
         else:
             response = jsonify({"error":"1", "data":{},'message':'did not create wish'})
         return response

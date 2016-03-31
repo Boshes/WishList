@@ -1,12 +1,21 @@
 .v-center {
     height: 50%;
+    width: 50%;
     overflow: visible;
     margin: auto;
     position: absolute;
+    background: url('../img/pattern2.jpg');
     top: 0; left: 0; bottom: 0; right: 0;
 }
+
+body{
+    background: url('../img/pattern2.jpg');
+    background-repeat: repeat;
+    font-family: Ubuntu;
+    max-height:1000px;
+}
 .wrapper {
-    background: url('../img/background.jpg');
+    background: url('../img/blue.jpg');
     background-repeat: repeat
 }
 .container{
@@ -15,6 +24,11 @@
 }
 
 nav {
-    background: url('../img/pattern.png');
+    background: url('../img/background.jpg');
     background-repeat: repeat;
+}
+
+@font-face{
+    font-family: Ubunutu;
+    src: url('../fonts/Ubuntu-L.tff');
 }

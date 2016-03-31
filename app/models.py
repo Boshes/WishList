@@ -43,14 +43,16 @@ class Wish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, db.ForeignKey('persons.id'))
     url = db.Column(db.String(255))
+    thumbnail = db.Column(db.String(255))
     name = db.Column(db.String(255))
     description = db.Column(db.String(255))
     addon = db.Column(db.DateTime,nullable=False)
     
     
-    def __init__(self,userid,url,name,description,addon):
+    def __init__(self,userid,url,thumbnail,name,description,addon):
         self.userid = userid
         self.url = url
+        self.thumbnail = thumbnail
         self.name = name
         self.description = description
         self.addon = addon
