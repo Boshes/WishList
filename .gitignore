@@ -1,6 +1,4 @@
 # Virtualenv
-venv
-env
 .Python
 include
 lib
