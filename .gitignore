@@ -14,9 +14,7 @@ Session.vim
 # Python Packages
 *.egg
 *.egg-info
-bin
 build
-dist
 sdist
 eggs
 env
