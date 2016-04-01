@@ -14,11 +14,16 @@
     "tests"
   ],
   "dependencies": {
+    "bower":"0.6.x",
     "angular": "^1.5.2",
     "bootstrap": "^3.3.6",
     "jquery":"~2.0.3",
     "angular-bootstrap":"1.2.5",
     "angular-route":"1.5.2",
     "angular-cookies":"1.4"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+    
   }
 }
