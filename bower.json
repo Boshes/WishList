@@ -23,7 +23,6 @@
     "angular-cookies":"1.4"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
-    
+    "postinstall": "bower install && grunt build"
   }
 }
