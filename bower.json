@@ -6,6 +6,9 @@
   ],
   "description": "project2",
   "license": "MIT",
+  "engine": {
+     "node": ">=0.10.0"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
