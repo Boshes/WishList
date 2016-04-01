@@ -14,7 +14,8 @@
   "homepage": "http://getbootstrap.com",
   "author": "Twitter, Inc.",
   "scripts": {
-    "test": "grunt test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "grunt install"
   },
   "style": "dist/css/bootstrap.css",
   "less": "less/bootstrap.less",

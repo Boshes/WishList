@@ -1,6 +1,11 @@
 {
   "name": "jquery",
   "main": "dist/jquery.js",
+    "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node jquery.js",
+    "postinstall": "bower install"
+  },
   "license": "MIT",
   "ignore": [
     "package.json"
