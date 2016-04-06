@@ -5,12 +5,6 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
     
     var image;
     
-    $scope.options = {
-        'NotReceieved':0,
-       'Received':1
-        
-    };
-    
     $scope.newWish = function () {
         var user = $cookies.get('userId');
         APIService.newWish(user,$scope.url,image,$scope.title,$scope.description)

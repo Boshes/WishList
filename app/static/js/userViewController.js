@@ -4,6 +4,7 @@ angular.module('WishList').controller('UserViewController',['$scope','$location'
     if($cookies.get('loggedIn')!='true'){
         $location.path('/');
     }
+    
     APIService.getUser($scope.currentUserId)
     .then(function(data){
         $scope.user = data.data;

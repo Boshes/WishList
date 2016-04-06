@@ -16,6 +16,9 @@ import BeautifulSoup
 import bcrypt
 import urlparse
 import urllib
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 #Landing page
 @app.route('/')
@@ -23,7 +26,7 @@ def index():
     """Render website's home page."""
     return app.send_static_file('index.html')
     
-#Sign up page
+#Sign up page, cURL with JSON Data or POSTMAN with POST of firstname,lastname,username,password,email
 @app.route('/api/user/register', methods=['POST'])
 def signup():
     json_data = json.loads(request.data)
@@ -37,7 +40,7 @@ def signup():
         response = jsonify({"error":"1","data":{},'message':'not signed up'})
     return response
 
-#Log in page for a registered user
+#Log in page for a registered user, cURL or POSTMAN with POST request with JSON Data of email,password
 @app.route('/api/user/login', methods=["POST"])
 def login():
     json_data = json.loads(request.data)
@@ -51,7 +54,7 @@ def login():
         response = jsonify({"error":"1","data":{},"message":'not logged'})
     return response
 
-#Log out a user
+#Log out a user, cURL or POSTMAN with POST request of JSON Data of token
 @app.route('/api/user/logout',methods=["POST"])
 def logout():
     json_data = json.loads(request.data)
@@ -64,8 +67,7 @@ def logout():
         response = jsonify({'status':'did not log out'})
     return response
     
-#View a registered user page
-# curl GET http://lab7-boshes.c9users.io/api/user/37
+#View a registered user page, cURL or POSTMAN with GET request
 @app.route('/api/user/<userid>',methods=["GET"])
 def user(userid):
     user = db.session.query(User).filter_by(id=userid).first()
@@ -75,8 +77,7 @@ def user(userid):
         response = jsonify({"error":"1","data":{},'message':'did not retrieve user'})
     return response
     
-#View all users page
-# curl GET http://lab7-boshes.c9users.io/api/users
+#View all users page, cURL or POSTMAN with GET request
 @app.route('/api/users',methods=["GET"])
 def users():
     users = db.session.query(User).all()
@@ -89,10 +90,8 @@ def users():
         response = jsonify({"error":"1","data":{},"message":"did not retrieve all users"})
     return response
 
-#New Wish
-# curl GET http://lab7-boshes.c9users.io/api/user/37/wishlist
-# curl -H "Content-Type: application/json" -X POST -d '{"url":"http://www.google.com","title":"Google.com","description":"All of Google"}' http://lab7-boshes.c9users.io/api/user/37/wishlist
-@app.route('/api/user/<userid>/wishlist',methods=["GET","POST"])
+#New Wish, cURL or POSTMAN with GET request or POST request of JSON Data of userid,url,thumbnail,title,description
+@app.route('/api/user/<userid>/wishlist')
 def wishes(userid):
     if request.method=="GET":
         user = db.session.query(User).filter_by(id=userid).first()
@@ -101,7 +100,7 @@ def wishes(userid):
         for wish in wishes:
             wishlist.append({'title':wish.name,'url':wish.url,'thumbnail':wish.thumbnail,'description':wish.description,'addon':timeinfo(wish.addon)})
         if(len(wishlist)>0):
-            response = jsonify({"error":"null","data":{"wishes":wishlist},"message":"Success"})
+            response = jsonify({"error":"null","data":{"user":user.first_name + " " + user.last_name, "wishes":wishlist},"message":"Success"})
         else:
             response = jsonify({"error":"1","data":{},"message":"Unable to get wishes"})
         return response
@@ -117,8 +116,7 @@ def wishes(userid):
             response = jsonify({"error":"1", "data":{},'message':'did not create wish'})
         return response
 
-#Used in image search on new wishes
-# curl -X GET http://lab7-boshes.c9users.io/api/thumbnail/process?url=http://www.amazon.com/gp/product/B00MRJ8LSU/
+#Used in image search on new wishes, cURL or POSTMAN with GET request with ?url= with the url desired
 @app.route('/api/thumbnail/process', methods=['GET'])
 def get_images():
     url = request.args.get('url')
@@ -138,6 +136,43 @@ def get_images():
         response = jsonify({'error':'null', "data":{"thumbnails":urllist},"message":"Success"})
     else:
         response = jsonify({'error':'1','data':{},'message':'Unable to extract thumbnails'})
+    return response
+    
+#Sends emails to recipients about their wishlists, cURL or POSTMAN with POST request of JSON Data of the userid,emails,message,subject,wishes
+@app.route('/api/send/<userid>',methods=['POST'])
+def send(userid):
+    user = db.session.query(User).filter_by(id=userid).first()
+    json_data = json.loads(request.data)
+    fromaddr = str(user.email)
+    sender = str(user.first_name) + " " + str(user.last_name)
+    emails = json_data.get('emails')
+    message = json_data.get('message')
+    subject = json_data.get('subject')
+    wishes = json_data.get('wishes')
+    wishlist = []
+    for wish in wishes:
+        wishlist.append(str(wish))
+    allWishes = ", ".join(str(wish) for wish in wishlist)
+    msg = MIMEMultipart()
+    emaillist = []
+    for email in emails:
+        emaillist.append(str(email))
+    msg['From'] = fromaddr
+    msg['To'] = ", ".join(emaillist)
+    msg['Subject'] = subject
+    header = "Good Day, this is an email from " + sender + " <" + fromaddr + "> " + "to you about their wishlist. This is the attached message: "
+    msg.attach(MIMEText(header,'plain'))
+    msg.attach(MIMEText(message,'plain'))
+    msg.attach(MIMEText('Their Wishlist: '+ allWishes,'plain'))
+    messageToSend = msg.as_string()
+    username = 'info3180.justenmorgan@gmail.com'
+    password = 'info3180'
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    server.starttls()
+    server.login(username,password)
+    server.sendmail(sender,emaillist,messageToSend)
+    server.quit()
+    response = jsonify({"error":"null","data":{"emails":emaillist,"subject":subject,"message":message,"wishes":allWishes},"message":"Success"})
     return response
             
 #Used for time added on items

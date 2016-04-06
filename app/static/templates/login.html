@@ -21,6 +21,7 @@
         <div class="col-lg-6 pull-right">
         <button type="submit" class="btn btn-success btn-lg" ng-click="login()">Login</button>
       </div>
+      <uib-alert type="danger" ng-if="errorMessage">{{errorMessage}}</uib-alert>
       </div>
   </div>
 </div>

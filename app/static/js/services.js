@@ -90,6 +90,17 @@ angular.module('WishList').factory('APIService',['$http','$q',function($http,$q)
                 
             });
             return deferred.promise;
+        },
+        sendWishes : function(emails,subject,message,wishes,userid){
+            var deferred = $q.defer();
+            $http.post('/api/send/'+userid,{emails:emails,subject:subject,message:message,wishes:wishes,userid:userid})
+            .success(function(data){
+                deferred.resolve(data);
+            })
+            .error(function(err){
+                deferred.reject(err);
+            });
+            return deferred.promise;
         }
     };
 }]);

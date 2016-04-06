@@ -4,6 +4,7 @@ angular.module('WishList').controller('LogoutController',['$scope','$location','
     if($cookies.get('loggedIn')!='true'){
         $location.path('/');
     }
+    
     $scope.logout = function () {
         var token = $cookies.get('token');
         APIService.logoutUser(token)

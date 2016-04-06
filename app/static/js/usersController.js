@@ -1,4 +1,4 @@
-angular.module('WishList').controller('UsersController',['$scope','$location','$cookies','APIService',function($scope,$location,$cookies, APIService){
+angular.module('WishList').controller('UsersController',['$scope','$location','$cookies','$uibModal','APIService',function($scope,$location,$cookies,$uibModal,APIService){
     $scope.currentUserName = $cookies.get('userName');
     $scope.currentUserId = $cookies.get('userId');
     if($cookies.get('loggedIn')!='true'){
@@ -16,7 +16,25 @@ angular.module('WishList').controller('UsersController',['$scope','$location','$
         console.log(userid);
         APIService.getWishes(userid)
         .then(function(data){
-            console.log(data);
-        })
-    }
+            var modalInstance = $uibModal.open({
+                templateUrl : 'static/templates/viewwishes.html',
+                controller : 'ViewWishesModal',
+                size: 'md',
+                resolve: {
+                    result : function(){
+                        return data;
+                    }
+                }
+            });
+        });
+    };
 }]);
+
+angular.module('WishList').controller('ViewWishesModal',function($scope,$uibModalInstance,result){
+    $scope.wishes = result.data.wishes;
+    $scope.user = result.data.user;
+    
+    $scope.ok= function (){
+        $uibModalInstance.dismiss();
+    };
+});

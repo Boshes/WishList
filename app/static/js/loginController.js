@@ -2,8 +2,8 @@ angular.module('WishList').controller('LoginController',['$scope','$location','$
     if($cookies.get('loggedIn')=='true'){
     $location.path('/home');
     }
+    
     $scope.login = function(){
-        
         APIService.loginUser($scope.email, $scope.password)
         .then(function (data) {
             if (data.message =='logged'){

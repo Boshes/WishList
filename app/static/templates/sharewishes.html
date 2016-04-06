@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">Share Wishlist To Emails</h3>
+</div>
+<hr>
+<div class="modal-body">
+     <div ng-form="shareForm" ng-class="{'has-error': (shareForm.email.$invalid && shareForm.email.$dirty)}" class="row text-center">
+         <div class="form-group">
+             <label>Emails to send to</label>
+             <input type="text" name="emails" ng-model="emails" class="form-control" placeholder="Please enter emails separated by commas" required>
+         </div>
+          <uib-alert type="danger" ng-if="shareForm.emails.$dirty && shareForm.emails.$invalid">Please enter an email</uib-alert>
+         <div class="form-group">
+             <label>Subject</label>
+             <input type="text" name="subject" ng-model="subject" class="form-control" placeholder="Please enter subject of email">
+         </div>
+         <div class="form-group">
+             <label>Message</label>
+             <textarea name="message" ng-model="message" class="form-control" cols="20" placeholder="Please enter message of email"></textarea>
+         </div>
+    </div>
+</div>
+<br>
+<hr>
+<div class="modal-footer">
+    <button class="btn btn-success" type="button" ng-click="confirm()">Send</button>
+    <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+</div>

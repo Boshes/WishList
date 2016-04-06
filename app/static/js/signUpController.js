@@ -2,6 +2,7 @@ angular.module('WishList').controller('SignUpController',['$scope','$location','
     if($cookies.get('loggedIn')=='true'){
     $location.path('/home');
     }
+    
     $scope.signUp = function () {
         APIService.signUpUser($scope.firstname,$scope.lastname,$scope.username,$scope.password,$scope.email)
         .then(function () {
