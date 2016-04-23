@@ -1,3 +1,6 @@
+//Angular Component to communicate the frontend application to the backend application
+//Justen Morgan - 620070138
+
 var app = angular.module("WishList",['ngRoute','ngCookies','ui.bootstrap']);
 
 app.run(function($cookies){

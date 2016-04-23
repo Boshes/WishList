@@ -31,7 +31,6 @@ def index():
 def signup():
     json_data = json.loads(request.data)
     user = User(json_data.get('firstname'), json_data.get('lastname'), json_data.get('username'),bcrypt.hashpw(json_data.get('password').encode('utf-8'), bcrypt.gensalt()),json_data.get('email'),datetime.now())
-    print user
     if user:
         db.session.add(user)
         db.session.commit()
@@ -91,7 +90,7 @@ def users():
     return response
 
 #New Wish, cURL or POSTMAN with GET request or POST request of JSON Data of userid,url,thumbnail,title,description
-@app.route('/api/user/<userid>/wishlist')
+@app.route('/api/user/<userid>/wishlist',methods=["GET","POST"])
 def wishes(userid):
     if request.method=="GET":
         user = db.session.query(User).filter_by(id=userid).first()
@@ -161,9 +160,11 @@ def send(userid):
     msg['To'] = ", ".join(emaillist)
     msg['Subject'] = subject
     header = "Good Day, this is an email from " + sender + " <" + fromaddr + "> " + "to you about their wishlist. This is the attached message: "
+    footer = "You can view this wishlist, among others, by searching for their name at this link: http://quiet-sierra-48055.herokuapp.com/#/users (Login is required)"
     msg.attach(MIMEText(header,'plain'))
     msg.attach(MIMEText(message,'plain'))
     msg.attach(MIMEText('Their Wishlist: '+ allWishes,'plain'))
+    msg.attach(MIMEText(footer,'plain'))
     messageToSend = msg.as_string()
     username = 'info3180.justenmorgan@gmail.com'
     password = 'info3180'

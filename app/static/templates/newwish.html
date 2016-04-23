@@ -13,7 +13,8 @@
     <uib-alert type="danger" ng-if="wishForm.title.$dirty && wishForm.title.$invalid">Please enter a name</uib-alert>
      <div class="form-group">
       <label>Description</label>
-      <input type="text" class="form-control" name="description" ng-model="description" placeholder="Enter a description" required>
+      <textarea type="text" class="form-control" name="description" ng-model="description" placeholder="Enter a description" style="max-width:100%" required>
+        </textarea>
     </div>
      <uib-alert type="danger" ng-if="wishForm.description.$dirty && wishForm.description.$invalid">Please enter a description</uib-alert>
     </div>
@@ -28,6 +29,7 @@
       </div>
       </div>
     <br>
+    <uib-alert type="danger" ng-if="urlfound==false">Please enter a URL</uib-alert>
     <img src="{{image}}" style="max-height:100px; max-width:100px; margin:auto; display:block;">
     <br>
         <div class="form-group text-center">

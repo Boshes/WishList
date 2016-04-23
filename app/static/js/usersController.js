@@ -13,19 +13,21 @@ angular.module('WishList').controller('UsersController',['$scope','$location','$
     });
     
     $scope.seeWishlist = function(userid){
-        console.log(userid);
         APIService.getWishes(userid)
         .then(function(data){
-            var modalInstance = $uibModal.open({
-                templateUrl : 'static/templates/viewwishes.html',
-                controller : 'ViewWishesModal',
-                size: 'md',
-                resolve: {
-                    result : function(){
-                        return data;
+            if(data.message=="Success"){
+                var modalInstance = $uibModal.open({
+                    templateUrl : 'static/templates/viewwishes.html',
+                    controller : 'ViewWishesModal',
+                    size: 'md',
+                    animation: true,
+                    resolve: {
+                        result : function(){
+                            return data;
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     };
 }]);

@@ -7,11 +7,11 @@
     <div class="col-lg-12">
         <div class="panel panel-default" ng-repeat="user in users track by $index">
             <div class="panel-heading">
-                {{user.firstname}} {{user.lastname}}
+                <h4>{{user.firstname}} {{user.lastname}}</h4>
             </div>
             <div class="panel-body">
                 <div class="col-md-6">
-                    <span class="pull-left">{{user.email}}</span>
+                    <span class="pull-left"><h5>{{user.email}}</h5></span>
                 </div>
                 <div class="col-md-6">
                     <span class="pull-right btn btn-info" ng-click="seeWishlist(user.id)"><i class="fa fa-eye"></i></span>

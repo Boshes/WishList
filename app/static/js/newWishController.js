@@ -19,36 +19,42 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
     };
 
     $scope.imageSearch = function(imagelink){
-        if ((imagelink.indexOf('www.')>=0) && !(imagelink.indexOf('http://www.')>=0)){
-            $scope.imagelink = "http://" + imagelink;
-        }
-        else if ((imagelink.indexOf('http://www.')>=0)){
-            $scope.imagelink = imagelink;
-        }
-        else if ((imagelink.indexOf('https://www.')>=0)){
-            $scope.imagelink = imagelink;
+        if (imagelink==null || imagelink==""){
+            $scope.urlfound = false;
         }
         else{
-            $scope.imagelink = "http://www." + imagelink;
-        }
-        APIService.getImages($scope.imagelink)
-        .then(function(data){
-           $scope.imagelist = data.data.thumbnails;
-           var modalInstance = $uibModal.open({
-               templateUrl: 'static/templates/wishgrid.html',
-               controller: 'WishModal',
-               size: 'md',
-               resolve: {
-                   imagelist : function(){
-                       return $scope.imagelist;
+            $scope.urlfound = true;
+            if ((imagelink.indexOf('www.')>=0) && !(imagelink.indexOf('http://www.')>=0)){
+                $scope.imagelink = "http://" + imagelink;
+            }
+            else if ((imagelink.indexOf('http://www.')>=0)){
+                $scope.imagelink = imagelink;
+            }
+            else if ((imagelink.indexOf('https://www.')>=0)){
+                $scope.imagelink = imagelink;
+            }
+            else{
+                $scope.imagelink = "http://www." + imagelink;
+            }
+            APIService.getImages($scope.imagelink)
+            .then(function(data){
+               $scope.imagelist = data.data.thumbnails;
+               var modalInstance = $uibModal.open({
+                   templateUrl: 'static/templates/wishgrid.html',
+                   controller: 'WishModal',
+                   size: 'md',
+                   resolve: {
+                       imagelist : function(){
+                           return $scope.imagelist;
+                       }
                    }
-               }
-           });
-           modalInstance.result.then(function(data){
-               image = data;
-               $scope.image = image;
-           });
-        });
+               });
+               modalInstance.result.then(function(data){
+                   image = data;
+                   $scope.image = image;
+               });
+            });
+        }
     };
 }]);
 

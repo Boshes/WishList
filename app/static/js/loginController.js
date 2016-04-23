@@ -15,9 +15,13 @@ angular.module('WishList').controller('LoginController',['$scope','$location','$
                 $scope.disabled = false;
                 $scope.loginForm = {};
             }
+            else if(data.message=="not logged"){
+                $scope.errorMessage = "Incorrect email or password";
+            }
         })
         .catch(function () {
             $scope.errorMessage = "Error logging in";
+            console.log($scope.errorMessage);
             $scope.loginForm = {};
         });
     };

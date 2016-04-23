@@ -1,15 +1,25 @@
 <wishlistheader></wishlistheader>
 <div class="container" ng-controller="UserViewController">
     <div class="col-lg-12">
-    <h1>Your Profile</h1>
+    <h1 class="pull-left">Your Profile</h1>
     </div>
     <div class="col-lg-12">
         <div class="col-lg-6">
-            {{user.firstname}} {{user.lastname}}
+            <h3>{{user.firstname}} {{user.lastname}}</h3>
+            <h4>Username: {{user.username}}</h4>
+            <h4>Email: {{user.email}}</h4>
         </div>
         <div class="col-lg-6">
-            <p>Username: {{user.username}}</p>
-            <p>Email: {{user.email}}</p>
+            <h4>Number of Wishes: {{numWishes}}</h4>
+            <h4>Wishlist Details</h4>
+            <div ng-repeat="wish in wishes track by $index">
+                <div class="col-lg-6">
+                    <h5>{{wish.title}}</h5>
+                </div>
+                <div class="col-lg-6">
+                    <h5>{{wish.description}}</h5>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -22,6 +22,7 @@ angular.module('WishList').controller('WishesController',['$scope','$location','
             templateUrl : 'static/templates/sharewishes.html',
             controller : 'ShareModal',
             size: 'md',
+            animation: true,
             resolve: {
                 user : function(){
                     return $scope.currentUserId;

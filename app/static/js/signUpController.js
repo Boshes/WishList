@@ -5,23 +5,31 @@ angular.module('WishList').controller('SignUpController',['$scope','$location','
     
     $scope.signUp = function () {
         APIService.signUpUser($scope.firstname,$scope.lastname,$scope.username,$scope.password,$scope.email)
-        .then(function () {
-            APIService.loginUser($scope.email,$scope.password)
-            .then(function (data){
-                if (data.data.status="logged"){
-                    $cookies.put('loggedIn' , true);
-                    $cookies.put('token' , data.data.token);
-                    $cookies.put('userId', data.data.id);
-                    $cookies.put('userName' , data.data.username);
-                    $location.path('/home');
-                    $scope.disabled = false;
+        .then(function (data) {
+            if(data.message=="Success"){
+                APIService.loginUser($scope.email,$scope.password)
+                .then(function (data){
+                    if (data.data.status="logged"){
+                        $cookies.put('loggedIn' , true);
+                        $cookies.put('token' , data.data.token);
+                        $cookies.put('userId', data.data.id);
+                        $cookies.put('userName' , data.data.username);
+                        $location.path('/home');
+                        $scope.disabled = false;
+                        $scope.signUpForm = {};
+                    }
+                })
+                .catch(function (err) {
+                    $scope.errorMessage = "Error signing up";
                     $scope.signUpForm = {};
-                }
-            })
-            .catch(function (err) {
-                $scope.errorMessage = "Error signing up";
-                $scope.signUpForm = {};
-            });
+                });
+            }
+            else{
+                $scope.errorMessage = "Email already exists in system";
+            }
+        })
+        .catch(function(err){
+            $scope.errorMessage = "Email already exists in system";
         });
     };
 }]);
