@@ -2,9 +2,9 @@
 <div class="container" ng-controller="UsersController">
     <div class="col-lg-12">
     <h1 class="pull-left">All Users</h1>
-    <br>
     </div>
     <div class="col-lg-12">
+        <hr>
         <div class="panel panel-default" ng-repeat="user in users track by $index">
             <div class="panel-heading">
                 <h4>{{user.firstname}} {{user.lastname}}</h4>

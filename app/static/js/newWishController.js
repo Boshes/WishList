@@ -24,7 +24,7 @@ angular.module('WishList').controller('NewWishController',['$scope','$location',
         }
         else{
             $scope.urlfound = true;
-            if ((imagelink.indexOf('www.')>=0) && !(imagelink.indexOf('http://www.')>=0)){
+            if ((imagelink.indexOf('www.')>=0) && !(imagelink.indexOf('http://www.')>=0) && !(imagelink.indexOf('https://www.')>=0)){
                 $scope.imagelink = "http://" + imagelink;
             }
             else if ((imagelink.indexOf('http://www.')>=0)){

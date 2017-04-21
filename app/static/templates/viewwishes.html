@@ -1,8 +1,7 @@
 <div class="modal-header">
     <h3 class="modal-title">{{user}}'s Wishlist</h3>
 </div>
-<hr>
-<div class="modal-body">
+<div class="modal-body spacing">
         <div class="col-lg-12">
         <div class="panel panel-default" ng-repeat="wish in wishes track by $index">
             <div class="panel-heading"></div>
@@ -20,7 +19,6 @@
     </div>
 </div>
 <br>
-<hr>
 <div class="modal-footer">
     <button class="btn btn-success" type="button" ng-click="ok()">OK</button>
 </div>

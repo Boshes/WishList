@@ -1,5 +1,6 @@
 <div class="container v-center" ng-controller="SignUpController">
   <h1 class="text-center">Sign Up</h1>
+  <hr>
   <div ng-form="signUpForm" ng-class="{'has-error':
     (signUpForm.firstname.$invalid && signUpForm.firstname.$dirty) || 
     (signUpForm.lastname.$invalid && signUpForm.lastname.$dirty) ||
@@ -38,7 +39,6 @@
     </div>
     <br>
     <div class="col-lg-12 text-center">
-      
       <div class="col-lg-6 pull-left">
         <a href="#/" class="btn btn-lg btn-default">Go Back</a>
       </div>

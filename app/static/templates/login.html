@@ -1,14 +1,15 @@
 <div class="container v-center" ng-controller="LoginController">
     <h2 class="text-center">Login</h2>
+    <hr>
     <div ng-form="loginForm" ng-class="{'has-error':
     (loginForm.email.$invalid && loginForm.email.$dirty) || 
     (loginForm.password.$invalid && loginForm.password.$dirty)}" class="row text-center">
-      <div class="form-group">
+      <div class="form-group spacing">
         <label>Email Address</label>
         <input type="text" class="form-control" name='email' ng-model="email" placeholder="Enter your email" required>
         </div>
         <uib-alert type="danger" ng-if="loginForm.email.$dirty && loginForm.email.$invalid">Please enter your email</uib-alert>
-      <div class="form-group">
+      <div class="form-group spacing">
         <label>Password</label>
         <input type="password" class="form-control" name="password" ng-model="password" placeholder="Enter your password" required>
       </div>

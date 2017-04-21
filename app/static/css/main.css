@@ -28,6 +28,11 @@ nav {
     background-repeat: repeat;
 }
 
+.spacing {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
 @font-face{
     font-family: Ubunutu;
     src: url('../fonts/Ubuntu-L.tff');

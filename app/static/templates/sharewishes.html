@@ -1,8 +1,7 @@
 <div class="modal-header">
     <h3 class="modal-title">Share Wishlist To Emails</h3>
 </div>
-<hr>
-<div class="modal-body">
+<div class="modal-body spacing">
      <div ng-form="shareForm" ng-class="{'has-error': (shareForm.email.$invalid && shareForm.email.$dirty)}" class="row text-center">
          <div class="form-group">
              <label>Emails to send to (separated by commas)</label>
@@ -20,7 +19,6 @@
     </div>
 </div>
 <br>
-<hr>
 <div class="modal-footer">
     <button class="btn btn-success" type="button" ng-click="confirm()">Send</button>
     <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
